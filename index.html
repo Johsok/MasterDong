@@ -471,7 +471,11 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
   }
   .nav-menu.open { transform: translateX(0); }
 
-  .nav-item > a { padding: 14px 16px; }
+  .nav-item > a {
+    padding: 14px 16px;
+    font-size: 16px;
+    letter-spacing: .03em;
+  }
 
   .dropdown {
     position: static; opacity: 1; visibility: visible;
@@ -1081,6 +1085,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           e.preventDefault();
           parent.classList.toggle('open');
         }
+      });
+    } else {
+      link.addEventListener('click', function () {
+        if (navMenu.classList.contains('open')) navMenu.classList.remove('open');
       });
     }
   });
