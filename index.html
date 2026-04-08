@@ -151,6 +151,17 @@ img { max-width: 100%; height: auto; display: block; }
 
 h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
 
+/* ===== Scroll Progress Bar ===== */
+#scroll-progress-bar {
+  position: fixed; top: 0; left: 0;
+  width: 0%; height: 4px;
+  background: linear-gradient(90deg, #00f5ff, #0bbcd6, #00ff88);
+  z-index: 9999;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
+  pointer-events: none;
+}
+
 /* ===== Navbar ===== */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -483,6 +494,8 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBG4W8QK"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
+<div id="scroll-progress-bar"></div>
 
 <!-- ===== Navbar ===== -->
 <nav class="navbar">
@@ -1076,6 +1089,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     link.addEventListener('click', function () {
       if (navMenu.classList.contains('open')) navMenu.classList.remove('open');
     });
+  });
+
+  /* ── 捲動進度條 ── */
+  document.addEventListener('scroll', function () {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('scroll-progress-bar').style.width = progress + '%';
   });
 
   /* ── FAQ 手風琴開合 ── */
