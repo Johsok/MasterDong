@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台中抿石董師傅 — 專業泥作工程 0928-912748</title>
+<meta name="description" content="台中泥作工程施作、水泥粉刷、貼壁磚及地磚、房屋修繕、浴室整修、抿石子、磚牆隔間、壁癌處理。30年經驗董師傅 0928-912748">
+<meta name="keywords" content="台中抿石董師傅, 台中泥作工程, 台中房屋修繕, 台中浴室整修, 台中抿石子, 台中磚牆隔間, 台中壁癌處理, 0928-912748">
+<meta name="robots" content="all">
+<link rel="shortcut icon" type="image/x-icon" href="https://sipstones.hermit.idv.tw/images/favicon.ico">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PBG4W8QK');</script>
+<!-- End Google Tag Manager -->
+<style>
+/**
+ * @fileoverview 台中抿石董師傅 — 深色科技質感單頁網站
+ * @description  整合所有服務頁面為單一 index.html，含頂部下拉導航與橫向圖片輪播
+ */
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', Arial, Helvetica, sans-serif;
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.9;
+  letter-spacing: .03em;
+  color: #d0d6e0;
+  background: #0b0f1a;
+}
+
+a { color: #5eead4; text-decoration: none; transition: color .2s; }
+a:hover { color: #99f6e4; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
+
+/* ===== Navbar ===== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(11, 15, 26, .92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(94, 234, 212, .12);
+}
+
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 28px; height: 80px;
+  gap: 6px;
+  position: relative;
+}
+
+.nav-brand {
+  font-size: clamp(24px, 3.8vw, 38px);
+  font-weight: 700; color: #5eead4;
+  white-space: nowrap; letter-spacing: .08em;
+  display: flex; align-items: center;
+}
+
+.nav-menu { display: flex; list-style: none; gap: 4px; }
+
+.nav-item { position: relative; }
+
+.nav-item > a {
+  display: flex; align-items: center; gap: 4px;
+  padding: 20px 18px; font-size: clamp(14px, 1.6vw, 17px); font-weight: 600;
+  color: #c0c8d8; transition: color .2s; letter-spacing: .04em;
+}
+.nav-item > a:hover,
+.nav-item:hover > a { color: #5eead4; }
+
+.nav-item > a .arrow {
+  font-size: 10px; transition: transform .2s;
+}
+.nav-item:hover > a .arrow { transform: rotate(180deg); }
+
+.dropdown {
+  position: absolute; top: 100%; left: 0; min-width: 180px;
+  background: #141a2e; border: 1px solid rgba(94, 234, 212, .15);
+  border-radius: 8px; padding: 6px 0;
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: all .25s ease;
+  box-shadow: 0 12px 32px rgba(0,0,0,.45);
+}
+.nav-item:hover .dropdown {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+
+.dropdown a {
+  display: block; padding: 10px 22px; font-size: clamp(13px, 1.5vw, 16px);
+  color: #a0a8b8; transition: background .15s, color .15s;
+  letter-spacing: .03em;
+}
+.dropdown a:hover { background: rgba(94, 234, 212, .08); color: #5eead4; }
+
+/* Hamburger (mobile) */
+.hamburger {
+  display: none; background: none; border: none; cursor: pointer;
+  flex-direction: column; gap: 5px; padding: 4px;
+  position: absolute; left: 16px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px; background: #c0c8d8;
+  transition: .3s;
+}
+
+/* ===== Hero ===== */
+.hero {
+  padding: 140px 28px 72px;
+  text-align: center;
+  background: linear-gradient(180deg, #0b0f1a 0%, #111827 100%);
+}
+.hero h1 {
+  font-size: clamp(26px, 3.8vw, 44px); margin-bottom: 20px;
+  letter-spacing: .06em;
+  background: linear-gradient(135deg, #5eead4, #818cf8);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p { max-width: 740px; margin: 0 auto 28px; color: #94a3b8; font-size: clamp(15px, 1.9vw, 19px); line-height: 2; }
+
+.hero-cta {
+  display: inline-block; padding: 14px 38px; border-radius: 8px;
+  background: linear-gradient(135deg, #5eead4, #6366f1);
+  color: #0b0f1a; font-weight: 700; font-size: clamp(15px, 1.9vw, 19px);
+  letter-spacing: .05em;
+  transition: transform .2s, box-shadow .2s;
+}
+.hero-cta:hover {
+  transform: translateY(-2px); color: #0b0f1a;
+  box-shadow: 0 8px 24px rgba(94, 234, 212, .3);
+}
+
+/* 桌機版：停用電話連結，純視覺按鈕 */
+@media (hover: hover) and (min-width: 769px) {
+  .hero-cta-tel {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+  }
+}
+
+/* ===== Section Common ===== */
+.section {
+  max-width: 1100px; margin: 0 auto;
+  padding: 68px 28px;
+}
+.section-title {
+  font-size: clamp(22px, 3vw, 30px); margin-bottom: 12px; color: #f0f4ff;
+  letter-spacing: .05em;
+}
+.section-sub {
+  color: #64748b; margin-bottom: 36px; font-size: clamp(14px, 1.6vw, 17px);
+  letter-spacing: .02em;
+}
+.section p {
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 2;
+  text-align: justify;
+  margin-bottom: 14px;
+}
+.section + .section { border-top: 1px solid rgba(94, 234, 212, .06); }
+
+/* ===== Carousel ===== */
+.carousel-wrapper {
+  position: relative; overflow: hidden; border-radius: 12px;
+  background: #111827; margin-bottom: 40px;
+  max-width: 620px; margin-left: auto; margin-right: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,.5);
+}
+
+.carousel-caption {
+  text-align: center; padding: 16px 24px;
+  background: rgba(17, 24, 39, .92);
+  font-size: clamp(14px, 1.6vw, 17px); color: #cbd5e1; font-weight: 600;
+  min-height: 50px; display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid rgba(94,234,212,.08);
+  letter-spacing: .04em;
+}
+
+.carousel-track {
+  display: flex; transition: transform .45s ease;
+}
+
+.carousel-slide {
+  min-width: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  background: #0f172a;
+}
+
+.carousel-slide img {
+  max-height: 440px; width: auto; max-width: 100%;
+  border-radius: 8px; object-fit: contain;
+  transform-origin: center center;
+  user-select: none; -webkit-user-select: none;
+  will-change: transform;
+}
+
+.carousel-slide { user-select: none; -webkit-user-select: none; }
+
+.carousel-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(94, 234, 212, .15); border: 1px solid rgba(94, 234, 212, .3);
+  color: #5eead4; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+  z-index: 2;
+}
+.carousel-btn:hover { background: rgba(94, 234, 212, .3); }
+.carousel-btn.prev { left: 12px; }
+.carousel-btn.next { right: 12px; }
+
+.carousel-dots {
+  display: flex; justify-content: center; gap: 8px;
+  padding: 12px 0 16px;
+}
+.carousel-dots .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #334155; border: none; cursor: pointer;
+  transition: background .2s;
+}
+.carousel-dots .dot.active { background: #5eead4; }
+
+/* ===== Service Cards ===== */
+.services-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px; margin-top: 24px;
+}
+
+.service-card {
+  background: #141a2e; border: 1px solid rgba(94, 234, 212, .08);
+  border-radius: 12px; padding: 32px 28px;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(94, 234, 212, .25);
+  box-shadow: 0 8px 32px rgba(94, 234, 212, .08);
+}
+
+.service-card h3 {
+  font-size: clamp(18px, 2.2vw, 23px); margin-bottom: 12px; color: #5eead4;
+  letter-spacing: .05em;
+}
+.service-card p { color: #94a3b8; font-size: clamp(14px, 1.6vw, 17px); line-height: 1.95; text-align: justify; }
+
+/* ===== LINE CTA ===== */
+.line-cta {
+  text-align: center; padding: 48px 28px;
+}
+.line-cta p {
+  text-align: center;
+}
+.line-cta img {
+  display: inline-block; max-width: 200px; border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+}
+
+/* ===== Footer ===== */
+.footer {
+  background: #070a12; border-top: 1px solid rgba(94, 234, 212, .1);
+  text-align: center; padding: 36px 24px;
+  color: #64748b; font-size: clamp(13px, 1.5vw, 16px);
+  letter-spacing: .03em;
+}
+.footer strong { color: #5eead4; }
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+
+  .nav-menu {
+    position: fixed; top: 80px; left: 0; right: 0; bottom: 0;
+    flex-direction: column; background: #0b0f1a;
+    padding: 16px; gap: 0; overflow-y: auto;
+    transform: translateX(100%); transition: transform .3s;
+  }
+  .nav-menu.open { transform: translateX(0); }
+
+  .nav-item > a { padding: 14px 16px; }
+
+  .dropdown {
+    position: static; opacity: 1; visibility: visible;
+    transform: none; border: none; background: #111827;
+    border-radius: 0; max-height: 0; overflow: hidden;
+    transition: max-height .3s ease;
+  }
+  .nav-item.open .dropdown { max-height: 500px; }
+
+  .hero h1 { font-size: clamp(22px, 5.5vw, 32px); }
+  .hero { padding: 115px 18px 44px; }
+  .section { padding: 44px 18px; }
+  .section p { font-size: clamp(14px, 3.8vw, 17px); }
+  .services-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PBG4W8QK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- ===== Navbar ===== -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <button class="hamburger" id="hamburger" aria-label="選單">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="nav-brand">董師傅泥作工程</span>
+    <ul class="nav-menu" id="navMenu">
+      <li class="nav-item">
+        <a href="#about">泥作工程 <span class="arrow">&#9662;</span></a>
+        <div class="dropdown">
+          <a href="#about">泥作工程總覽</a>
+          <a href="#section-repair">房屋修繕</a>
+          <a href="#section-wall">壁癌處理</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#section-bathroom">衛浴工程 <span class="arrow">&#9662;</span></a>
+        <div class="dropdown">
+          <a href="#section-bathroom">浴室整修翻新</a>
+          <a href="#section-bathroom">廁所修改</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#section-tile">磁磚工程 <span class="arrow">&#9662;</span></a>
+        <div class="dropdown">
+          <a href="#section-tile">鋪地磚</a>
+          <a href="#section-tile">貼磁磚</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#section-brick">磚牆 / 隔間</a>
+      </li>
+      <li class="nav-item">
+        <a href="#section-stone">抿石工程 <span class="arrow">&#9662;</span></a>
+        <div class="dropdown">
+          <a href="#section-stone">抿石子</a>
+          <a href="#section-stone">洗石子</a>
+          <a href="#section-facade">外牆拉皮施工</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#contact">聯絡我們</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="home">
+  <h1>台中抿石泥作工程 — 30年專業經驗</h1>
+  <p>董師傅提供台中地區泥作工程施作：水泥粉刷、貼壁磚及地磚、房屋修繕翻新、浴室整修、抿石子、磚牆隔間、壁癌處理等全方位服務。免費現場估價，看圖估價均可。</p>
+  <a href="tel:0928912748" class="hero-cta hero-cta-tel">立即來電 0928-912748</a>
+</section>
+
+<!-- ===== 泥作工程 ===== -->
+<section class="section" id="about">
+  <h2 class="section-title">泥作工程</h2>
+  <p class="section-sub">專線：0928-912748｜服務時間：星期一至星期日</p>
+  <p>台中抿石董師傅提供台中泥作工程施作：水泥粉刷、粗底、細底、粉光。台中地區水泥工，土水工程，瓷磚/磚牆粉光、抿石子、貼地磚、壁磚、地磚更換修補，鋪水泥、拆除牆面、隔間踏腳石、女兒牆RC、土木工程，大小工程免費估價。泥作工程有住家、公寓、大樓、透天厝、別墅、樓梯間、店面、停車場皆可承做。</p>
+
+  <div class="carousel-wrapper" style="margin-top:32px;">
+    <div class="carousel-caption" id="caption-niza"></div>
+    <div class="carousel-track" id="track-niza">
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index01.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index02.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index03.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index04.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index05.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index06.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index09as.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index09bs.jpg" alt="台中泥作工程"></div>
+      <div class="carousel-slide" data-caption="台中泥作工程"><img src="images/index09cs.jpg" alt="台中泥作工程"></div>
+    </div>
+    <button class="carousel-btn prev" data-carousel="niza">&#10094;</button>
+    <button class="carousel-btn next" data-carousel="niza">&#10095;</button>
+    <div class="carousel-dots" id="dots-niza"></div>
+  </div>
+</section>
+
+<!-- ===== 房屋修繕 ===== -->
+<section class="section" id="section-repair">
+  <h2 class="section-title">房屋修繕</h2>
+  <p class="section-sub">台中房屋修繕、房屋改造、房屋裝修｜董師傅 0928-912748</p>
+  <p>房屋修繕有泥作工程、房間拓寬、套房隔間、廁所整修、廚房整修、防水工程、廢棄物處理。泥作工程有住家、公寓、大樓、透天厝、別墅、樓梯間、店面、停車場皆可承做。</p>
+
+  <div class="carousel-wrapper" style="margin-top:32px;">
+    <div class="carousel-caption" id="caption-repair"></div>
+    <div class="carousel-track" id="track-repair">
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101a.jpg" alt="台中房屋修繕"></div>
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101b.jpg" alt="台中房屋修繕"></div>
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101c.jpg" alt="台中房屋修繕"></div>
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101d.jpg" alt="台中房屋修繕"></div>
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101e.jpg" alt="台中房屋修繕"></div>
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101f.jpg" alt="台中房屋修繕"></div>
+      <div class="carousel-slide" data-caption="台中房屋修繕"><img src="images/0101g.jpg" alt="台中房屋修繕"></div>
+    </div>
+    <button class="carousel-btn prev" data-carousel="repair">&#10094;</button>
+    <button class="carousel-btn next" data-carousel="repair">&#10095;</button>
+    <div class="carousel-dots" id="dots-repair"></div>
+  </div>
+</section>
+
+<!-- ===== 浴室整修 ===== -->
+<section class="section" id="section-bathroom">
+  <h2 class="section-title">浴室整修翻新</h2>
+  <p class="section-sub">台中浴室整修、浴室翻修、浴缸拆除、乾溼分離施工｜0928-912748</p>
+  <p>衛浴設施是每日生活必備也是使用頻繁的空間，若年久老舊不僅無法享受使用的舒適，甚至會影響健康。趁浴室整修之際，增設一個SPA空間，不僅如廁、沐浴更舒適健康，對於緊張忙碌的現代人而言，也是獲得紓解及放鬆的管道。</p>
+  <p style="margin-top:12px;">整體浴室翻修規劃前，首先要清楚浴室內的管線配置及空間大小，包括門、窗、水龍頭、排水孔、浴缸、馬桶排污孔、電線插座等的位置及尺寸大小等。局部設備的更換只須針對單品的選購；整體換裝則包含了水電管線變更、泥作施工、壁磚地磚鋪設及相關配件選購。</p>
+  <p style="margin-top:12px;"><strong style="color:#5eead4;">浴室廁所防水工程：</strong>浴室廁所漏水、浴室整修、泥作翻新工程、施用彈性水泥、水管漏水處理、水電配管工程、給水管修漏、防水層修漏、排水管修漏、廁所水泥粉刷工程、黏貼磁磚。</p>
+
+  <div class="carousel-wrapper" style="margin-top:32px;">
+    <div class="carousel-caption" id="caption-bath"></div>
+    <div class="carousel-track" id="track-bath">
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0201as.jpg" alt="台中浴室整修"></div>
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0201bs.jpg" alt="台中浴室整修"></div>
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0201cs.jpg" alt="台中浴室整修"></div>
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0201ds.jpg" alt="台中浴室整修"></div>
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0201es.jpg" alt="台中浴室整修"></div>
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0201fs.jpg" alt="台中浴室整修"></div>
+      <div class="carousel-slide" data-caption="台中浴室整修"><img src="images/0202ds.jpg" alt="台中浴室整修"></div>
+    </div>
+    <button class="carousel-btn prev" data-carousel="bath">&#10094;</button>
+    <button class="carousel-btn next" data-carousel="bath">&#10095;</button>
+    <div class="carousel-dots" id="dots-bath"></div>
+  </div>
+</section>
+
+<!-- ===== 磁磚工程 ===== -->
+<section class="section" id="section-tile">
+  <h2 class="section-title">磁磚工程 — 鋪地磚 / 貼磁磚</h2>
+  <p class="section-sub">台中專業磁磚施工服務｜0928-912748</p>
+  <p>台中地磚施工專業服務，貼磁磚浴室地板、牆面，重新裝修浴室磁磚，專業鋪設、填縫及防水處理。專業師傅施工，保證品質。提供貼壁磚、鋪地磚等服務，專注於磁磚鋪設和縫隙填縫，確保完美防水效果，為您打造舒適浴室空間。</p>
+</section>
+
+<!-- ===== 磚牆隔間 ===== -->
+<section class="section" id="section-brick">
+  <h2 class="section-title">磚牆隔間</h2>
+  <p class="section-sub">台中泥作、磚牆隔間、砌磚｜0928-912748</p>
+  <p>台中泥作、磚牆隔間、抿石、貼壁磚鋪地磚、浴室整修、廚房整修、房屋修繕、舊屋翻新。</p>
+
+  <div class="carousel-wrapper" style="margin-top:32px;">
+    <div class="carousel-caption" id="caption-brick"></div>
+    <div class="carousel-track" id="track-brick">
+      <div class="carousel-slide" data-caption="台中磚牆隔間"><img src="images/0501.jpg" alt="台中磚牆隔間"></div>
+    </div>
+    <button class="carousel-btn prev" data-carousel="brick">&#10094;</button>
+    <button class="carousel-btn next" data-carousel="brick">&#10095;</button>
+    <div class="carousel-dots" id="dots-brick"></div>
+  </div>
+</section>
+
+<!-- ===== 抿石子 / 洗石子 ===== -->
+<section class="section" id="section-stone">
+  <h2 class="section-title">抿石子 / 洗石子</h2>
+  <p class="section-sub">台中專業抿石、洗石子工程｜0928-912748</p>
+  <p>提供台中地區的各種泥作工程，包括房屋整建、翻修、修繕、抿石子、洗石子、貼壁磚、貼磁磚、磚牆隔間和衛浴整修服務。</p>
+
+  <div class="carousel-wrapper" style="margin-top:32px;">
+    <div class="carousel-caption" id="caption-stone"></div>
+    <div class="carousel-track" id="track-stone">
+      <div class="carousel-slide" data-caption="台中抿石子工程"><img src="images/0603a.jpg" alt="台中抿石子"></div>
+      <div class="carousel-slide" data-caption="台中抿石子工程"><img src="images/0603b.jpg" alt="台中抿石子"></div>
+      <div class="carousel-slide" data-caption="台中抿石子工程"><img src="images/0603c.jpg" alt="台中抿石子"></div>
+    </div>
+    <button class="carousel-btn prev" data-carousel="stone">&#10094;</button>
+    <button class="carousel-btn next" data-carousel="stone">&#10095;</button>
+    <div class="carousel-dots" id="dots-stone"></div>
+  </div>
+</section>
+
+<!-- ===== 外牆拉皮 ===== -->
+<section class="section" id="section-facade">
+  <h2 class="section-title">外牆拉皮施工</h2>
+  <p class="section-sub">防水安全、提升房屋價值｜0928-912748</p>
+  <p>考慮到防水和安全，在進行外牆拉皮施工時十分重要。為確保防水效果，建議同時更換鋁門窗。完成外牆拉皮後，房屋的整體價值將會有所提升。</p>
+</section>
+
+<!-- ===== 壁癌處理 ===== -->
+<section class="section" id="section-wall">
+  <h2 class="section-title">壁癌處理 / 白華處理</h2>
+  <p class="section-sub">台中壁癌打除、壁癌處理、白華處理｜0928-912748</p>
+  <p>壁癌是本身牆壁水泥或潮濕吐出來的鹽分，白鹽/華是一種白色粉塵，一但進入人體是非常影響健康的一種白粉，有些比較嚴重還會長香菇/草。以古早方式施工法是把牆壁打到見磚後從新粉光，但是水泥本身就有鹽分，時間一到或是過於潮濕還是會產生壁癌。</p>
+
+  <div class="carousel-wrapper" style="margin-top:32px;">
+    <div class="carousel-caption" id="caption-wall"></div>
+    <div class="carousel-track" id="track-wall">
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1001.jpg" alt="台中壁癌處理"></div>
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1002.jpg" alt="台中壁癌處理"></div>
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1003.jpg" alt="台中壁癌處理"></div>
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1004.jpg" alt="台中壁癌處理"></div>
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1005.jpg" alt="台中壁癌處理"></div>
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1006.jpg" alt="台中壁癌處理"></div>
+      <div class="carousel-slide" data-caption="台中壁癌處理"><img src="images/1007.jpg" alt="台中壁癌處理"></div>
+    </div>
+    <button class="carousel-btn prev" data-carousel="wall">&#10094;</button>
+    <button class="carousel-btn next" data-carousel="wall">&#10095;</button>
+    <div class="carousel-dots" id="dots-wall"></div>
+  </div>
+</section>
+
+<!-- ===== 服務總覽 Cards ===== -->
+<section class="section" id="services">
+  <h2 class="section-title">服務項目總覽</h2>
+  <p class="section-sub">一通電話，全方位泥作服務到府</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <h3>泥作工程</h3>
+      <p>室內裝修、壁癌處理、水泥粉刷、粗底、細底、粉光、房間拓寬、套房隔間、廁所整修、廚房整修、室內拆除、貼磁磚、貼地磚、貼壁磚、舊屋翻新、房屋改建。</p>
+    </div>
+    <div class="service-card">
+      <h3>房屋修繕</h3>
+      <p>泥作工程、房間拓寬、套房隔間、廁所整修、廚房整修、防水工程。</p>
+    </div>
+    <div class="service-card">
+      <h3>浴室整修翻新</h3>
+      <p>舊的裝飾打除清理、水泥砂運料打底、牆面及地面磁磚安裝。</p>
+    </div>
+    <div class="service-card">
+      <h3>鋪地磚 / 貼磁磚</h3>
+      <p>台中地磚施工專業服務，貼磁磚浴室地板、牆面，重新裝修浴室磁磚，專業鋪設、填縫及防水處理。</p>
+    </div>
+    <div class="service-card">
+      <h3>磚牆隔間</h3>
+      <p>提供台中地區的泥作、磚牆隔間、抿石、貼壁磚、鋪地磚、浴室整修、廚房整修、房屋修繕和舊屋翻新服務。</p>
+    </div>
+    <div class="service-card">
+      <h3>抿石 / 洗石子</h3>
+      <p>提供台中地區各種泥作工程，包括房屋整建、翻修、修繕、抿石子、洗石子、貼壁磚、貼磁磚、磚牆隔間和衛浴整修。</p>
+    </div>
+    <div class="service-card">
+      <h3>外牆拉皮施工</h3>
+      <p>考慮到防水和安全，建議同時更換鋁門窗。完成外牆拉皮後，房屋的整體價值將會有所提升。</p>
+    </div>
+    <div class="service-card">
+      <h3>壁癌 / 白華處理</h3>
+      <p>壁癌打除、壁癌處理、白華處理，保護家人健康。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LINE / Contact ===== -->
+<section class="section line-cta" id="contact">
+  <h2 class="section-title" style="margin-bottom:16px;">聯絡我們</h2>
+  <p style="margin-bottom:24px; color:#94a3b8;">加入 LINE 好友即時諮詢，或直接撥打電話 <a href="tel:0928912748" style="color:#5eead4; font-weight:700;">0928-912748</a></p>
+  <a href="https://qr-official.line.me/sid/L/717vkedy.png" target="_blank">
+    <img src="images/line.jpg" alt="LINE 聯絡" style="display:inline-block;">
+  </a>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <p><strong>台中抿石董師傅</strong> 提供台中專業抿石泥作工程施作 ｜ 抿石泥作工程專線：<a href="tel:0928912748">0928-912748</a></p>
+</footer>
+
+<script>
+/**
+ * @description 初始化輪播換頁、圖片縮放平移與手機版選單
+ */
+(function () {
+  'use strict';
+
+  /** @type {string[]} 所有輪播識別碼 */
+  var carouselIds = ['niza', 'repair', 'bath', 'brick', 'stone', 'wall'];
+
+  /**
+   * 計算兩觸控點間距
+   * @param {TouchList} touches
+   * @returns {number}
+   */
+  function getTouchDist(touches) {
+    var dx = touches[0].clientX - touches[1].clientX;
+    var dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  /**
+   * 初始化單一輪播：換頁 + 圖片縮放平移
+   * @param {string} id - 輪播識別碼
+   */
+  function initCarousel(id) {
+    var track = document.getElementById('track-' + id);
+    if (!track) return;
+    var wrapper   = track.parentElement;
+    var caption   = document.getElementById('caption-' + id);
+    var dotsWrap  = document.getElementById('dots-' + id);
+
+    var slides = track.querySelectorAll('.carousel-slide');
+    var total  = slides.length;
+    if (total === 0) return;
+
+    var current = 0;
+
+    /**
+     * 每張投影片的縮放與平移狀態
+     * @type {Array<{scale:number, panX:number, panY:number}>}
+     */
+    var zoomStates = [];
+    for (var i = 0; i < total; i++) {
+      zoomStates.push({ scale: 1, panX: 0, panY: 0 });
+    }
+
+    /**
+     * 將縮放/平移狀態套用至指定投影片圖片
+     * @param {number} idx
+     */
+    function applyZoom(idx) {
+      var img = slides[idx].querySelector('img');
+      if (!img) return;
+      var s = zoomStates[idx];
+      if (s.scale === 1 && s.panX === 0 && s.panY === 0) {
+        img.style.transform = '';
+        img.style.cursor    = 'default';
+      } else {
+        img.style.transform = 'scale(' + s.scale + ') translate(' +
+          (s.panX / s.scale) + 'px, ' + (s.panY / s.scale) + 'px)';
+        img.style.cursor = 'grab';
+      }
+    }
+
+    /**
+     * 重置指定投影片的縮放為原始大小
+     * @param {number} idx
+     */
+    function resetZoom(idx) {
+      zoomStates[idx] = { scale: 1, panX: 0, panY: 0 };
+      applyZoom(idx);
+    }
+
+    /* ── 建立圓點指示器 ── */
+    for (var i = 0; i < total; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', '第 ' + (i + 1) + ' 張');
+      (function (idx) {
+        dot.addEventListener('click', function () { goTo(idx); });
+      })(i);
+      dotsWrap.appendChild(dot);
+    }
+
+    /**
+     * 切換至目標投影片，並重置前一張的縮放
+     * @param {number} idx
+     */
+    function goTo(idx) {
+      resetZoom(current);
+      current = ((idx % total) + total) % total;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      caption.textContent = slides[current].getAttribute('data-caption') || '';
+      var allDots = dotsWrap.querySelectorAll('.dot');
+      for (var d = 0; d < allDots.length; d++) {
+        allDots[d].className = d === current ? 'dot active' : 'dot';
+      }
+    }
+
+    goTo(0);
+
+    /* ── 上/下一張按鈕 ── */
+    wrapper.querySelectorAll('.carousel-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        goTo(current + (btn.classList.contains('next') ? 1 : -1));
+      });
+    });
+
+    /* ── 滑鼠滾輪縮放 ── */
+    wrapper.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      var s = zoomStates[current];
+      s.scale = Math.max(1, Math.min(5, s.scale * (e.deltaY > 0 ? 0.88 : 1.14)));
+      if (s.scale === 1) { s.panX = 0; s.panY = 0; }
+      applyZoom(current);
+    }, { passive: false });
+
+    /* ── 滑鼠拖曳平移（縮放狀態下） ── */
+    var mouseDown  = false;
+    var mLastX = 0, mLastY = 0;
+
+    wrapper.addEventListener('mousedown', function (e) {
+      if (e.button !== 0 || zoomStates[current].scale <= 1) return;
+      mouseDown = true;
+      mLastX = e.clientX; mLastY = e.clientY;
+      document.body.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!mouseDown) return;
+      var s = zoomStates[current];
+      s.panX += e.clientX - mLastX;
+      s.panY += e.clientY - mLastY;
+      mLastX = e.clientX; mLastY = e.clientY;
+      applyZoom(current);
+    });
+
+    document.addEventListener('mouseup', function () {
+      if (!mouseDown) return;
+      mouseDown = false;
+      document.body.style.cursor = '';
+      var img = slides[current].querySelector('img');
+      if (img && zoomStates[current].scale > 1) img.style.cursor = 'grab';
+    });
+
+    /* ── 觸控手勢：捏合縮放 / 單指平移 / 滑動換頁 ── */
+    var tStartX = 0, tStartY = 0;
+    var tLastX  = 0, tLastY  = 0;
+    var pinchDist  = 0;
+    var lastTapMs  = 0;
+
+    wrapper.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 2) {
+        pinchDist = getTouchDist(e.touches);
+        tLastX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        tLastY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      } else if (e.touches.length === 1) {
+        tStartX = tLastX = e.touches[0].clientX;
+        tStartY = tLastY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    wrapper.addEventListener('touchmove', function (e) {
+      var s = zoomStates[current];
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        var dist = getTouchDist(e.touches);
+        var cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        var cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        if (pinchDist > 0) {
+          s.scale = Math.max(1, Math.min(5, s.scale * (dist / pinchDist)));
+          s.panX += cx - tLastX;
+          s.panY += cy - tLastY;
+        }
+        pinchDist = dist;
+        tLastX = cx; tLastY = cy;
+        applyZoom(current);
+      } else if (e.touches.length === 1 && s.scale > 1) {
+        e.preventDefault();
+        s.panX += e.touches[0].clientX - tLastX;
+        s.panY += e.touches[0].clientY - tLastY;
+        tLastX = e.touches[0].clientX;
+        tLastY = e.touches[0].clientY;
+        applyZoom(current);
+      }
+      /* scale=1 單指：不阻止預設，讓頁面正常捲動 */
+    }, { passive: false });
+
+    wrapper.addEventListener('touchend', function (e) {
+      pinchDist = 0;
+      var s = zoomStates[current];
+
+      /* 雙擊快速重置縮放 */
+      var now = Date.now();
+      if (now - lastTapMs < 280 && e.changedTouches.length === 1 && s.scale > 1) {
+        resetZoom(current);
+        lastTapMs = 0;
+        return;
+      }
+      lastTapMs = now;
+
+      /* 縮放過小自動重置 */
+      if (s.scale < 1.05) {
+        s.scale = 1; s.panX = 0; s.panY = 0;
+        applyZoom(current);
+      }
+
+      /* 水平滑動換頁（僅未縮放時） */
+      if (s.scale === 1 && e.changedTouches.length === 1) {
+        var dX = e.changedTouches[0].clientX - tStartX;
+        var dY = Math.abs(e.changedTouches[0].clientY - tStartY);
+        if (Math.abs(dX) > 50 && Math.abs(dX) > dY * 1.5) {
+          goTo(current + (dX < 0 ? 1 : -1));
+        }
+      }
+    }, { passive: true });
+  }
+
+  carouselIds.forEach(initCarousel);
+
+  /* ── 手機版漢堡選單 ── */
+  var hamburger = document.getElementById('hamburger');
+  var navMenu   = document.getElementById('navMenu');
+
+  hamburger.addEventListener('click', function () {
+    navMenu.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.nav-item > a').forEach(function (link) {
+    var parent = link.parentElement;
+    if (parent.querySelector('.dropdown')) {
+      link.addEventListener('click', function (e) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          parent.classList.toggle('open');
+        }
+      });
+    }
+  });
+
+  document.querySelectorAll('.dropdown a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (navMenu.classList.contains('open')) navMenu.classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>
