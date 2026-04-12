@@ -1,0 +1,6 @@
+# 效率與 Token 優化準則
+- **精簡回應**：除非必要，否則不要解釋程式碼。直接給出修改建議或 Diff。
+- **局部更新**：不要重新生成整個檔案，僅針對需要修改的 function 或區塊進行輸出。
+- **避免重複**：如果邏輯已存在，請引用而非重寫。
+- **不要過度思考**：針對當前問題回答，不要主動預測未來的需求（預測會產生大量無用 Token）。
+Always respect the boundaries defined in .cursorignore. Do not attempt to analyze files in 'data/' or 'venv/' folders.

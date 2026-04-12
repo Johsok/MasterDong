@@ -1,0 +1,33 @@
+# 1. 排除依賴庫（最燒 Token 的元兇）
+node_modules/
+env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# 2. 排除建置輸出與快取
+dist/
+build/
+.next/
+.cache/
+*.log
+
+# 3. 排除大型數據檔案 (Pandas 常用)
+*.csv
+*.jsonl
+*.parquet
+*.sqlite3
+data/
+
+# 4. 排除隱私與環境變數 (安全性考量)
+.env
+.env.*
+*.pem
+*.key
+
+# 5. 排除專案無關的雜物
+.git/
+.DS_Store
+*.exe
+*.pdf
