@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>九大行星特效 — 太陽系</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; font-family: '微軟正黑體', 'Microsoft JhengHei', 'Arial', sans-serif; }
+  canvas { display: block; }
+
+  #title {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 20px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(100, 180, 255, 0.8);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  #ui {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.85);
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    backdrop-filter: blur(6px);
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: rgba(255, 255, 255, 0.18); border-color: rgba(255,255,255,0.5); }
+  .btn.active { background: rgba(100, 180, 255, 0.25); border-color: rgba(100, 180, 255, 0.6); }
+
+  #info {
+    position: fixed;
+    bottom: 22px;
+    left: 22px;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 11px;
+    line-height: 1.9;
+    pointer-events: none;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="title">☀ 太陽系 — 九大行星</div>
+<div id="ui">
+  <button class="btn active" id="speedBtn">⚡ 加速模式</button>
+  <button class="btn active" id="meteorBtn">☄️ 流星雨</button>
+  <button class="btn active" id="beltBtn">🪨 小行星帶</button>
+</div>
+<div id="info">
+  ● 水星 ● 金星 ● 地球 ● 火星<br>
+  ● 木星 ● 土星 ● 天王星 ● 海王星 ● 冥王星
+</div>
+
+<script>
+/* =========================================================
+ * 九大行星太陽系特效
+ * Features: 星空閃爍、軌道路徑、小行星帶、太陽日冕、
+ *           行星繞轉（真實圖片+漸層備援）、土星環、
+ *           流星雨、速度切換
+ * ========================================================= */
+
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+/** @type {number} */
+let W, H, CX, CY;
+
+function resize() {
+  W  = canvas.width  = window.innerWidth;
+  H  = canvas.height = window.innerHeight;
+  CX = W / 2;
+  CY = H / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* ---- 縮放係數 ---- */
+/** @returns {number} 軌道縮放比 */
+const orbitScale = () => Math.min(W, H) * 0.44 / 620;
+/** @returns {number} 行星大小縮放比 */
+const sizeScale  = () => Math.min(W, H) / 900;
+
+/* =========================================================
+ * 星空 (背景)
+ * ========================================================= */
+const STARS = Array.from({ length: 480 }, () => ({
+  x:     Math.random(),
+  y:     Math.random(),
+  r:     Math.random() * 1.4 + 0.3,
+  base:  0.3 + Math.random() * 0.5,
+  phase: Math.random() * Math.PI * 2,
+  freq:  0.015 + Math.random() * 0.03,
+}));
+
+/* =========================================================
+ * 小行星帶 (火星與木星之間)
+ * ========================================================= */
+const BELT_ASTEROIDS = Array.from({ length: 280 }, () => ({
+  angle:  Math.random() * Math.PI * 2,
+  frac:   Math.random(),           // 0=內側, 1=外側
+  size:   0.5 + Math.random() * 0.8,
+  speed:  (0.00008 + Math.random() * 0.00006) * (Math.random() < 0.5 ? 1 : -1),
+  alpha:  0.3 + Math.random() * 0.4,
+}));
+
+/* =========================================================
+ * 流星
+ * ========================================================= */
+const meteors = [];
+let meteorTimer   = 0;
+let showMeteors   = true;
+let showBelt      = true;
+let speedMode     = true;   // 預設加速模式，讓所有行星可見運動
+
+/**
+ * 產生一顆流星
+ */
+function spawnMeteor() {
+  const side = Math.random();
+  let x, y;
+  if (side < 0.6) {
+    x = Math.random() * W;
+    y = -15;
+  } else {
+    x = -15;
+    y = Math.random() * H * 0.6;
+  }
+  const spread = (Math.random() - 0.5) * 0.5;
+  const baseAngle = Math.PI / 4 + spread;
+  const spd = 7 + Math.random() * 7;
+  meteors.push({
+    x, y,
+    vx:    Math.cos(baseAngle) * spd,
+    vy:    Math.sin(baseAngle) * spd,
+    len:   55 + Math.random() * 85,
+    life:  1,
+    decay: 0.007 + Math.random() * 0.009,
+    width: 0.8 + Math.random() * 1.4,
+  });
+}
+
+/* =========================================================
+ * 行星資料
+ * orbitR  : 基礎軌道半徑 (px, 1920×1080 時的目標)
+ * period  : 公轉週期 (地球年)
+ * size    : 顯示直徑基準 (px)
+ * img     : Wikimedia Commons 縮圖 URL (真實NASA/ESA圖)
+ * color[] : 漸層備援顏色
+ * ecc     : 軌道離心率
+ * ========================================================= */
+const PLANET_DATA = [
+  {
+    name: '水星', orbitR: 82,  period: 0.241, size: 7,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mercury_in_true_color.jpg/256px-Mercury_in_true_color.jpg',
+    colors: ['#d0d0d0', '#888888', '#505050'],
+    ecc: 0.205,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '金星', orbitR: 130, period: 0.615, size: 11,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Venus_from_Mariner_10.jpg/256px-Venus_from_Mariner_10.jpg',
+    colors: ['#f5e480', '#d4a830', '#a07020'],
+    ecc: 0.007,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '地球', orbitR: 178, period: 1.000, size: 12,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/256px-The_Earth_seen_from_Apollo_17.jpg',
+    colors: ['#5a9ed6', '#1c5fa0', '#0a3060'],
+    ecc: 0.017,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '火星', orbitR: 228, period: 1.881, size: 9,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/OSIRIS_Mars_true_color.jpg/256px-OSIRIS_Mars_true_color.jpg',
+    colors: ['#e07050', '#b83010', '#6a1a00'],
+    ecc: 0.093,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '木星', orbitR: 310, period: 11.86, size: 24,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg/256px-Jupiter_and_its_shrunken_Great_Red_Spot.jpg',
+    colors: ['#f0d9a0', '#c88040', '#906030'],
+    ecc: 0.049,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '土星', orbitR: 398, period: 29.46, size: 20, hasRing: true,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/256px-Saturn_during_Equinox.jpg',
+    colors: ['#f5eabb', '#d4b070', '#907840'],
+    ecc: 0.057,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '天王星', orbitR: 480, period: 84.01, size: 15,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Uranus2.jpg/256px-Uranus2.jpg',
+    colors: ['#c0f0f0', '#60d0d0', '#2080a0'],
+    ecc: 0.046,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '海王星', orbitR: 556, period: 164.8, size: 14,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Neptune_-_Voyager_2_%2829347980845%29_flatten_crop.jpg/256px-Neptune_-_Voyager_2_%2829347980845%29_flatten_crop.jpg',
+    colors: ['#8090ff', '#3a50c8', '#1a2580'],
+    ecc: 0.010,
+    angle: Math.random() * Math.PI * 2,
+  },
+  {
+    name: '冥王星', orbitR: 620, period: 248.0, size: 6,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Pluto_in_True_Color_-_High-Res.jpg/256px-Pluto_in_True_Color_-_High-Res.jpg',
+    colors: ['#d4b898', '#a07858', '#604838'],
+    ecc: 0.248,
+    angle: Math.random() * Math.PI * 2,
+  },
+];
+
+/* ---- 預載行星圖片 ---- */
+const PLANET_IMGS = PLANET_DATA.map(p => {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.src = p.img;
+  img.onerror = () => { img._failed = true; };
+  return img;
+});
+
+/* =========================================================
+ * 繪製函式
+ * ========================================================= */
+
+/**
+ * 繪製星空背景與星雲
+ * @param {number} t - 時間秒
+ */
+function drawBackground(t) {
+  ctx.fillStyle = '#00000a';
+  ctx.fillRect(0, 0, W, H);
+
+  // 星雲光暈
+  const nebulas = [
+    { x: 0.15, y: 0.3,  r: 0.25, c: 'rgba(60,40,120,' },
+    { x: 0.85, y: 0.7,  r: 0.22, c: 'rgba(20,60,100,' },
+    { x: 0.5,  y: 0.15, r: 0.18, c: 'rgba(80,20,60,' },
+  ];
+  nebulas.forEach(n => {
+    const g = ctx.createRadialGradient(n.x*W, n.y*H, 0, n.x*W, n.y*H, n.r*Math.min(W,H));
+    g.addColorStop(0, n.c + '0.07)');
+    g.addColorStop(1, n.c + '0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  });
+
+  // 閃爍星星
+  STARS.forEach(s => {
+    const a = s.base + Math.sin(t * s.freq + s.phase) * 0.25;
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${Math.max(0.05, Math.min(1, a))})`;
+    ctx.fill();
+  });
+}
+
+/**
+ * 繪製太陽（含日冕光暈）
+ */
+function drawSun() {
+  const r = 26 * sizeScale();
+  // 多層日冕
+  [4, 2.8, 2, 1.5].forEach((mul, i) => {
+    const g = ctx.createRadialGradient(CX, CY, r * 0.8, CX, CY, r * mul);
+    const alpha = [0.04, 0.07, 0.12, 0.25][i];
+    g.addColorStop(0, `rgba(255,180,30,${alpha})`);
+    g.addColorStop(0.5, `rgba(255,100,10,${alpha * 0.4})`);
+    g.addColorStop(1, 'rgba(255,50,0,0)');
+    ctx.beginPath();
+    ctx.arc(CX, CY, r * mul, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+  });
+  // 太陽本體
+  const sg = ctx.createRadialGradient(CX - r * 0.3, CY - r * 0.3, 0, CX, CY, r);
+  sg.addColorStop(0, '#fffbe0');
+  sg.addColorStop(0.3, '#ffee00');
+  sg.addColorStop(0.65, '#ff9900');
+  sg.addColorStop(1, '#ff4400');
+  ctx.beginPath();
+  ctx.arc(CX, CY, r, 0, Math.PI * 2);
+  ctx.fillStyle = sg;
+  ctx.fill();
+}
+
+/**
+ * 繪製軌道橢圓
+ */
+function drawOrbits() {
+  const os = orbitScale();
+  PLANET_DATA.forEach(p => {
+    const a = p.orbitR * os;
+    const b = a * Math.sqrt(1 - p.ecc * p.ecc);
+    ctx.beginPath();
+    ctx.ellipse(CX, CY, a, b, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 0.6;
+    ctx.setLineDash([]);
+    ctx.stroke();
+  });
+}
+
+/**
+ * 繪製小行星帶
+ */
+function drawAsteroidBelt() {
+  const os = orbitScale();
+  const innerR = PLANET_DATA[3].orbitR * os + 12; // 火星外
+  const outerR = PLANET_DATA[4].orbitR * os - 12; // 木星內
+  const bw = outerR - innerR;
+  BELT_ASTEROIDS.forEach(a => {
+    const r   = innerR + a.frac * bw;
+    const ax  = CX + Math.cos(a.angle) * r;
+    const ay  = CY + Math.sin(a.angle) * r * 0.97;
+    ctx.beginPath();
+    ctx.arc(ax, ay, a.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180,160,130,${a.alpha})`;
+    ctx.fill();
+    a.angle += a.speed;
+  });
+}
+
+/**
+ * 繪製土星環
+ * @param {number} x
+ * @param {number} y
+ * @param {number} pr - 行星半徑
+ */
+function drawSaturnRing(x, y, pr) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(1, 0.28);
+  const ri = pr * 1.28;
+  const ro = pr * 2.35;
+  const g = ctx.createRadialGradient(0, 0, ri, 0, 0, ro);
+  g.addColorStop(0,   'rgba(210,185,120,0.85)');
+  g.addColorStop(0.3, 'rgba(190,160,100,0.65)');
+  g.addColorStop(0.65,'rgba(170,140, 80,0.40)');
+  g.addColorStop(1,   'rgba(150,120, 60,0)');
+  ctx.beginPath();
+  ctx.arc(0, 0, ro, 0, Math.PI * 2);
+  ctx.arc(0, 0, ri, 0, Math.PI * 2, true);
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.restore();
+}
+
+/**
+ * 繪製單顆行星
+ * @param {number} x
+ * @param {number} y
+ * @param {number} pr - 行星半徑
+ * @param {HTMLImageElement} img
+ * @param {string[]} colors - 漸層備援顏色 [highlight, mid, dark]
+ */
+function drawPlanet(x, y, pr, img, colors) {
+  ctx.save();
+  ctx.imageSmoothingEnabled  = true;
+  ctx.imageSmoothingQuality  = 'high';
+  ctx.beginPath();
+  ctx.arc(x, y, pr, 0, Math.PI * 2);
+  ctx.clip();
+
+  const hasImg = img && img.complete && !img._failed && img.naturalWidth > 0;
+
+  if (hasImg) {
+    ctx.drawImage(img, x - pr, y - pr, pr * 2, pr * 2);
+  } else {
+    const g = ctx.createRadialGradient(x - pr * 0.35, y - pr * 0.35, 0, x + pr * 0.2, y + pr * 0.2, pr * 1.3);
+    g.addColorStop(0, colors[0]);
+    g.addColorStop(0.5, colors[1]);
+    g.addColorStop(1, colors[2]);
+    ctx.fillStyle = g;
+    ctx.fillRect(x - pr, y - pr, pr * 2, pr * 2);
+  }
+
+  // 3D 光照：左上高光 + 右下陰影（有圖片時更淡，保留細節）
+  const lightAlpha  = hasImg ? 0.08 : 0.12;
+  const shadowAlpha = hasImg ? 0.35 : 0.65;
+  const shadow = ctx.createRadialGradient(x - pr * 0.35, y - pr * 0.35, 0, x + pr * 0.5, y + pr * 0.5, pr * 1.5);
+  shadow.addColorStop(0,    `rgba(255,255,255,${lightAlpha})`);
+  shadow.addColorStop(0.45, 'rgba(0,0,0,0)');
+  shadow.addColorStop(1,    `rgba(0,0,0,${shadowAlpha})`);
+  ctx.fillStyle = shadow;
+  ctx.fillRect(x - pr, y - pr, pr * 2, pr * 2);
+
+  // 邊緣大氣散射（柔化行星邊緣）
+  if (hasImg) {
+    const atm = ctx.createRadialGradient(x, y, pr * 0.82, x, y, pr);
+    atm.addColorStop(0, 'rgba(0,0,0,0)');
+    atm.addColorStop(0.7, 'rgba(0,0,0,0)');
+    atm.addColorStop(1, 'rgba(0,0,10,0.3)');
+    ctx.fillStyle = atm;
+    ctx.fillRect(x - pr, y - pr, pr * 2, pr * 2);
+  }
+
+  ctx.restore();
+
+  // 行星光暈
+  const glow = ctx.createRadialGradient(x, y, pr * 0.85, x, y, pr * 1.8);
+  glow.addColorStop(0, 'rgba(255,255,255,0.04)');
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(x, y, pr * 1.8, 0, Math.PI * 2);
+  ctx.fillStyle = glow;
+  ctx.fill();
+}
+
+/**
+ * 繪製流星雨
+ */
+function drawMeteors() {
+  meteorTimer++;
+  if (meteorTimer > 35 + Math.random() * 55) {
+    spawnMeteor();
+    if (Math.random() < 0.2) spawnMeteor(); // 偶發流星群
+    meteorTimer = 0;
+  }
+
+  for (let i = meteors.length - 1; i >= 0; i--) {
+    const m = meteors[i];
+    m.x    += m.vx;
+    m.y    += m.vy;
+    m.life -= m.decay;
+
+    if (m.life <= 0 || m.x > W + 80 || m.y > H + 80) {
+      meteors.splice(i, 1);
+      continue;
+    }
+
+    const speed = Math.hypot(m.vx, m.vy);
+    const tailX = m.x - (m.vx / speed) * m.len * m.life;
+    const tailY = m.y - (m.vy / speed) * m.len * m.life;
+
+    const g = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
+    g.addColorStop(0, `rgba(255,255,255,${m.life.toFixed(2)})`);
+    g.addColorStop(0.25, `rgba(180,210,255,${(m.life * 0.6).toFixed(2)})`);
+    g.addColorStop(1, 'rgba(100,150,255,0)');
+
+    ctx.beginPath();
+    ctx.moveTo(m.x, m.y);
+    ctx.lineTo(tailX, tailY);
+    ctx.strokeStyle = g;
+    ctx.lineWidth   = m.width * m.life;
+    ctx.lineCap     = 'round';
+    ctx.stroke();
+
+    // 流星頭部閃光
+    if (m.life > 0.5) {
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.width * 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${(m.life * 0.8).toFixed(2)})`;
+      ctx.fill();
+    }
+  }
+}
+
+/* =========================================================
+ * 動畫主迴圈
+ * ========================================================= */
+let frame = 0;
+
+function animate() {
+  frame++;
+  const t = frame * 0.016; // 模擬時間 (秒)
+
+  drawBackground(t);
+  drawOrbits();
+
+  if (showBelt) drawAsteroidBelt();
+
+  drawSun();
+
+  // 行星更新與繪製
+  PLANET_DATA.forEach((p, i) => {
+    // 正常模式: 地球10秒一圈; 加速模式: 以 sqrt 壓縮比讓各星可見運動
+    let angSpeed;
+    if (speedMode) {
+      // 以水星5秒一圈為基準，用 sqrt 壓縮讓外側行星也可見
+      const mercurySpeed = (2 * Math.PI) / (5 * 60); // rad/frame
+      angSpeed = mercurySpeed * Math.sqrt(0.241 / p.period);
+    } else {
+      angSpeed = (2 * Math.PI) / (p.period * 10 * 60);
+    }
+    p.angle += angSpeed;
+
+    const os  = orbitScale();
+    const ss  = sizeScale();
+    const a   = p.orbitR * os;
+    const b   = a * Math.sqrt(1 - p.ecc * p.ecc);
+    const px  = CX + Math.cos(p.angle) * a;
+    const py  = CY + Math.sin(p.angle) * b;
+    const pr  = p.size * ss + 2.5; // 行星像素半徑
+
+    // 土星環（在行星背後先畫）
+    if (p.hasRing) drawSaturnRing(px, py, pr);
+
+    drawPlanet(px, py, pr, PLANET_IMGS[i], p.colors);
+
+    // 名稱標籤
+    const fontSize = Math.max(9, 11 * ss);
+    ctx.font        = `${fontSize}px 微軟正黑體, Microsoft JhengHei, Arial`;
+    ctx.textAlign   = 'center';
+    ctx.fillStyle   = 'rgba(255,255,255,0.75)';
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur  = 3;
+    ctx.fillText(p.name, px, py + pr + fontSize + 2);
+    ctx.shadowBlur  = 0;
+  });
+
+  if (showMeteors) drawMeteors();
+
+  requestAnimationFrame(animate);
+}
+
+/* =========================================================
+ * UI 按鈕事件
+ * ========================================================= */
+document.getElementById('speedBtn').addEventListener('click', function () {
+  speedMode = !speedMode;
+  this.textContent = speedMode ? '⚡ 加速模式' : '🕰️ 真實比例';
+  this.classList.toggle('active', speedMode);
+});
+
+document.getElementById('meteorBtn').addEventListener('click', function () {
+  showMeteors = !showMeteors;
+  this.textContent = showMeteors ? '☄️ 流星雨' : '☄️ 流星雨（關）';
+  this.classList.toggle('active', showMeteors);
+  if (!showMeteors) meteors.length = 0;
+});
+
+document.getElementById('beltBtn').addEventListener('click', function () {
+  showBelt = !showBelt;
+  this.textContent = showBelt ? '🪨 小行星帶' : '🪨 小行星帶（關）';
+  this.classList.toggle('active', showBelt);
+});
+
+/* 啟動 */
+animate();
+</script>
+</body>
+</html>
