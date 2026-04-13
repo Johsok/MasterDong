@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高科技人氣計數器 - 太空粒子版</title>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ==========================================
+     全域設定與深邃太空背景
+     ========================================== */
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* 深黑到深藍紫的漸層基底 */
+    background: radial-gradient(circle at 50% 50%, #0a1128 0%, #000000 100%);
+    color: #fff;
+    font-family: 'Noto Sans TC', sans-serif;
+    overflow: hidden;
+  }
+
+  /* 背景粒子 Canvas (絕對定位放置在最底層) */
+  #space-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none; /* 避免擋住點擊 */
+  }
+
+  /* ==========================================
+     標題區塊
+     ========================================== */
+  .title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    letter-spacing: 6px;
+    color: #e0f7fa;
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  /* ==========================================
+     高科技計數器框 (發光線條邊框)
+     ========================================== */
+  .counter-box {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 20px 40px;
+    background: rgba(4, 10, 20, 0.6);
+    /* 發光線條邊框 */
+    border: 2px solid #00e5ff;
+    border-radius: 16px;
+    /* 內外多層次光暈 */
+    box-shadow: 
+      0 0 20px rgba(0, 229, 255, 0.3),
+      0 0 40px rgba(0, 229, 255, 0.1),
+      inset 0 0 20px rgba(0, 229, 255, 0.2);
+    backdrop-filter: blur(10px); /* 毛玻璃效果讓背景粒子透點光 */
+    
+    transform-origin: center center;
+    z-index: 1;
+  }
+
+  /* 🎯 實體按壓與釋放能量的脈衝動畫 */
+  .counter-box.trigger-pulse {
+    animation: physicalPressPulse 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes physicalPressPulse {
+    0%   { transform: scale(1); box-shadow: 0 0 20px rgba(0,229,255,0.3), inset 0 0 20px rgba(0,229,255,0.2); }
+    20%  { transform: scale(0.92); box-shadow: 0 0 5px rgba(0,229,255,0.8), inset 0 0 40px rgba(0,229,255,0.5); border-color: #fff; } 
+    50%  { transform: scale(1.08); box-shadow: 0 0 60px rgba(0,229,255,1), 0 0 100px rgba(0,229,255,0.6), inset 0 0 30px rgba(0,229,255,0.6); border-color: #00e5ff; } 
+    100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,229,255,0.3), inset 0 0 20px rgba(0,229,255,0.2); } 
+  }
+
+  /* ==========================================
+     未來感數據核心圖示 (SVG)
+     ========================================== */
+  .data-core {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .data-core svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 10px #00e5ff);
+  }
+
+  .core-outer {
+    transform-origin: 50px 50px;
+    animation: spin 8s linear infinite;
+  }
+  .core-inner {
+    transform-origin: 50px 50px;
+    animation: spinReverse 3s linear infinite;
+  }
+
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+  @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+
+  /* ==========================================
+     發光發熱字體與流暢滾動數字
+     ========================================== */
+  .digits-container {
+    display: flex;
+    gap: 8px;
+  }
+
+  .digit {
+    width: 38px;
+    height: 60px; 
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    /* 字體發光設定 */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 
+      0 0 10px #00e5ff, 
+      0 0 20px #00e5ff, 
+      0 0 30px #0088ff;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
+  }
+
+  .digit-inner {
+    position: absolute;
+    width: 100%;
+    transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1.2);
+  }
+
+  .digit-inner div {
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+  }
+
+  /* 系統狀態文字 */
+  .system-status {
+    margin-top: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    color: #00e5ff;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    animation: blink 1.5s infinite;
+    z-index: 1;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+</style>
+</head>
+
+<body>
+
+  <canvas id="space-canvas"></canvas>
+
+  <div class="title">我的網站標題</div>
+  
+  <div class="counter-box" id="counter-box">
+    <div class="data-core">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="8" fill="#fff" />
+        <circle class="core-inner" cx="50" cy="50" r="20" fill="none" stroke="#00e5ff" stroke-width="4" stroke-dasharray="25 15" />
+        <circle class="core-outer" cx="50" cy="50" r="38" fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="10 30 50 20" />
+        <line x1="50" y1="5" x2="50" y2="15" stroke="#00e5ff" stroke-width="2" />
+        <line x1="50" y1="85" x2="50" y2="95" stroke="#00e5ff" stroke-width="2" />
+        <line x1="5" y1="50" x2="15" y2="50" stroke="#00e5ff" stroke-width="2" />
+        <line x1="85" y1="50" x2="95" y2="50" stroke="#00e5ff" stroke-width="2" />
+      </svg>
+    </div>
+
+    <div class="digits-container" id="digits-container"></div>
+  </div>
+  
+  <div class="system-status" id="system-status">SYS.INITIALIZING...</div>
+
+<script>
+// ==========================================
+// 0. 懸浮粒子 (Canvas Particle System)
+// ==========================================
+const canvas = document.getElementById('space-canvas');
+const ctx = canvas.getContext('2d');
+let width, height, particles = [];
+
+function initParticles() {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+  particles = [];
+  // 建立 120 顆懸浮粒子
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2 + 0.5,
+      speedX: (Math.random() - 0.5) * 0.6, // 水平緩慢漂浮
+      speedY: (Math.random() - 0.5) * 0.6, // 垂直緩慢漂浮
+      opacity: Math.random() * 0.7 + 0.1,  // 不同的明暗度
+      glow: Math.random() > 0.5 ? '#00e5ff' : '#ffffff' // 隨機青藍色或白色
+    });
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, width, height);
+  
+  particles.forEach(p => {
+    p.x += p.speedX;
+    p.y += p.speedY;
+    
+    // 讓粒子飄出螢幕後從另一端回來
+    if (p.x < 0) p.x = width;
+    if (p.x > width) p.x = 0;
+    if (p.y < 0) p.y = height;
+    if (p.y > height) p.y = 0;
+
+    // 繪製發光粒子
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.glow;
+    ctx.globalAlpha = p.opacity;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = p.glow;
+    ctx.fill();
+  });
+  
+  requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener('resize', initParticles);
+initParticles();
+animateParticles();
+
+// ==========================================
+// 1. 動態生成數字 DOM 結構
+// ==========================================
+const DIGITS_COUNT = 5; 
+const DIGIT_HEIGHT = 60; 
+
+const digitsContainer = document.getElementById("digits-container");
+
+for (let i = 0; i < DIGITS_COUNT; i++) {
+  const digitWrap = document.createElement("div");
+  digitWrap.className = "digit";
+
+  const inner = document.createElement("div");
+  inner.className = "digit-inner";
+
+  for (let n = 0; n <= 9; n++) {
+    const numDiv = document.createElement("div");
+    numDiv.innerText = n;
+    inner.appendChild(numDiv);
+  }
+
+  digitWrap.appendChild(inner);
+  digitsContainer.appendChild(digitWrap);
+}
+
+// ==========================================
+// 2. 觸發動畫與數字滾動邏輯
+// ==========================================
+function executePulseAndScroll(countValue) {
+  const countStr = String(countValue).padStart(DIGITS_COUNT, '0');
+  const digitInners = document.querySelectorAll(".digit-inner");
+  const counterBox = document.getElementById("counter-box");
+
+  // 觸發「按下與釋放」的脈衝動畫
+  counterBox.classList.remove("trigger-pulse");
+  void counterBox.offsetWidth; 
+  counterBox.classList.add("trigger-pulse");
+
+  // 讓數字流暢滾動
+  countStr.split('').forEach((numChar, index) => {
+    const yOffset = -parseInt(numChar) * DIGIT_HEIGHT;
+    digitInners[index].style.transform = `translateY(${yOffset}px)`;
+  });
+}
+
+// ==========================================
+// 3. Supabase 連線與資料讀寫
+// ==========================================
+const supabaseUrl = 'https://doicpmczzvharnszpbsr.supabase.co';
+const supabaseKey = 'sb_publishable_c46aC5fxRALpXswtxy8aIA_E-LHxIu9';
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+const sysStatus = document.getElementById("system-status");
+
+async function bootSystemCounter() {
+  try {
+    sysStatus.innerText = "ACCESSING CORE DATA...";
+
+    const { data, error } = await supabaseClient
+      .from('site_stats')
+      .select('view_count')
+      .eq('id', 1)
+      .single();
+
+    if (error) throw error;
+
+    let targetCount = data ? data.view_count : 0;
+    
+    targetCount++;
+    sysStatus.innerText = "UPDATING DATABASE...";
+
+    const { error: updateError } = await supabaseClient
+      .from('site_stats')
+      .update({ view_count: targetCount })
+      .eq('id', 1);
+
+    if (updateError) throw updateError;
+
+    sysStatus.style.display = 'none';
+    executePulseAndScroll(targetCount);
+
+  } catch (err) {
+    console.error("Supabase 連線異常:", err);
+    sysStatus.innerText = "SYS.ERROR: CONNECTION REFUSED";
+    sysStatus.style.color = "#ff2a2a";
+    sysStatus.style.animation = "none";
+  }
+}
+
+// 稍微延遲一下啟動，讓粒子先飄一下
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    bootSystemCounter();
+  }, 1000);
+});
+</script>
+
+</body>
+</html>

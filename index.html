@@ -9,6 +9,8 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://johsonluo.github.io/niza/">
 <link rel="shortcut icon" type="image/x-icon" href="https://sipstones.hermit.idv.tw/images/favicon.ico">
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
@@ -475,6 +477,99 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
   color: #64748b; font-size: clamp(12px, 1.3vw, 14px); margin-top: 2px;
 }
 
+/* ===== 太空粒子背景 Canvas ===== */
+#space-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 0; pointer-events: none;
+}
+body > *:not(#space-canvas) { position: relative; z-index: 1; }
+
+/* ===== 小廣告欄 (Hero 徵人看板) ===== */
+.hero-row { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; }
+
+.recruit-banner {
+  flex-shrink: 0;
+  width: 220px;
+  background: rgba(10, 17, 40, .85);
+  border: 1px solid rgba(0, 229, 255, .35);
+  border-radius: 12px;
+  padding: 14px 16px;
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(0, 229, 255, .15), inset 0 0 12px rgba(0, 229, 255, .08);
+  text-align: center;
+}
+
+.recruit-scroll {
+  display: inline-block;
+  animation: recruitScroll 7s linear infinite;
+}
+@keyframes recruitScroll {
+  0%   { transform: translateY(100%); opacity: 0; }
+  8%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
+
+.recruit-scroll .line {
+  font-size: clamp(13px, 1.5vw, 16px);
+  line-height: 1.8;
+  white-space: nowrap;
+  font-weight: 700;
+  animation: glowColor 3s ease-in-out infinite;
+}
+.recruit-scroll .line-title {
+  font-size: clamp(17px, 2vw, 22px);
+  letter-spacing: .6em;
+  margin-bottom: 2px;
+}
+.recruit-scroll .line-salary {
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, .6);
+}
+
+@keyframes glowColor {
+  0%   { color: #00e5ff; text-shadow: 0 0 8px rgba(0,229,255,.7); }
+  33%  { color: #a78bfa; text-shadow: 0 0 12px rgba(167,139,250,.7); }
+  66%  { color: #5eead4; text-shadow: 0 0 10px rgba(94,234,212,.7); }
+  100% { color: #00e5ff; text-shadow: 0 0 8px rgba(0,229,255,.7); }
+}
+
+/* ===== 人氣計數器 (Navbar) ===== */
+.nav-counter {
+  display: flex; align-items: center; gap: 6px;
+  margin-left: 6px; flex-shrink: 0;
+}
+.nav-counter-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px; color: #00e5ff;
+  letter-spacing: 1px; white-space: nowrap;
+  text-shadow: 0 0 6px rgba(0,229,255,.5);
+}
+.nav-digits {
+  display: flex; gap: 2px;
+}
+.nav-digit {
+  width: 22px; height: 32px;
+  background: rgba(0,0,0,.55);
+  border: 1px solid rgba(0,229,255,.35);
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px; font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 8px #00e5ff, 0 0 16px #0088ff;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.8);
+  position: relative;
+}
+.nav-digit-inner {
+  position: absolute; width: 100%;
+  transition: transform .9s cubic-bezier(.25,1,.3,1.2);
+}
+.nav-digit-inner div {
+  height: 32px; line-height: 32px; text-align: center;
+}
+
 /* ===== Mobile ===== */
 @media (max-width: 768px) {
   .hamburger { display: flex; }
@@ -506,6 +601,11 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
   .section { padding: 44px 18px; }
   .section p { font-size: clamp(14px, 3.8vw, 17px); }
   .services-grid { grid-template-columns: 1fr; }
+
+  .hero-row { flex-direction: column; gap: 18px; }
+  .recruit-banner { width: 80%; max-width: 260px; }
+
+  .nav-counter { display: none; }
 }
 </style>
 </head>
@@ -516,6 +616,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <div id="scroll-progress-bar"></div>
+<canvas id="space-canvas"></canvas>
 
 <!-- ===== Navbar ===== -->
 <nav class="navbar">
@@ -568,12 +669,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <a href="#contact">聯絡我們</a>
       </li>
     </ul>
+    <div class="nav-counter">
+      <span class="nav-counter-label">VISITORS</span>
+      <div class="nav-digits" id="nav-digits"></div>
+    </div>
   </div>
 </nav>
 
 <!-- ===== Hero ===== -->
 <section class="hero" id="home">
-  <h1>台中抿石泥作工程 — 30年專業經驗</h1>
+  <div class="hero-row">
+    <div>
+      <h1>台中抿石泥作工程 — 30年專業經驗</h1>
+    </div>
+    <div class="recruit-banner">
+      <div class="recruit-scroll">
+        <div class="line line-title">誠&nbsp;&nbsp;&nbsp;&nbsp;徵</div>
+        <div class="line">泥作小工或學徒</div>
+        <div class="line line-salary">薪資 $1600~$2500/日</div>
+        <div class="line">(依能力給薪或面議)</div>
+        <div class="line">(可日結或月結)</div>
+        <div class="line">供午餐</div>
+      </div>
+    </div>
+  </div>
   <p>董師傅提供台中地區泥作工程施作：水泥粉刷、貼壁磚及地磚、房屋修繕翻新、浴室整修、抿石子、磚牆隔間、壁癌處理等全方位服務。免費現場估價，看圖估價均可。</p>
   <a href="tel:0928912748" class="hero-cta hero-cta-tel">立即來電 0928-912748</a>
 </section>
@@ -1138,6 +1257,97 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
   });
+
+  /* ── 太空懸浮粒子 ── */
+  var spaceCanvas = document.getElementById('space-canvas');
+  var sCtx = spaceCanvas.getContext('2d');
+  var sW, sH, sParticles = [];
+
+  function initSpaceParticles() {
+    sW = spaceCanvas.width  = window.innerWidth;
+    sH = spaceCanvas.height = window.innerHeight;
+    sParticles = [];
+    for (var i = 0; i < 100; i++) {
+      sParticles.push({
+        x: Math.random() * sW,
+        y: Math.random() * sH,
+        size: Math.random() * 2 + 0.4,
+        sx: (Math.random() - 0.5) * 0.5,
+        sy: (Math.random() - 0.5) * 0.5,
+        op: Math.random() * 0.6 + 0.1,
+        glow: Math.random() > 0.5 ? '#00e5ff' : '#ffffff'
+      });
+    }
+  }
+
+  function drawSpaceParticles() {
+    sCtx.clearRect(0, 0, sW, sH);
+    for (var i = 0; i < sParticles.length; i++) {
+      var p = sParticles[i];
+      p.x += p.sx; p.y += p.sy;
+      if (p.x < 0) p.x = sW; if (p.x > sW) p.x = 0;
+      if (p.y < 0) p.y = sH; if (p.y > sH) p.y = 0;
+      sCtx.beginPath();
+      sCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      sCtx.fillStyle = p.glow;
+      sCtx.globalAlpha = p.op;
+      sCtx.shadowBlur = 6;
+      sCtx.shadowColor = p.glow;
+      sCtx.fill();
+    }
+    requestAnimationFrame(drawSpaceParticles);
+  }
+
+  window.addEventListener('resize', initSpaceParticles);
+  initSpaceParticles();
+  drawSpaceParticles();
+
+  /* ── 人氣計數器 (Navbar) ── */
+  var NAV_DIGITS = 5;
+  var NAV_DH = 32;
+  var navDigitsBox = document.getElementById('nav-digits');
+
+  for (var d = 0; d < NAV_DIGITS; d++) {
+    var dw = document.createElement('div');
+    dw.className = 'nav-digit';
+    var inner = document.createElement('div');
+    inner.className = 'nav-digit-inner';
+    for (var n = 0; n <= 9; n++) {
+      var nd = document.createElement('div');
+      nd.textContent = n;
+      inner.appendChild(nd);
+    }
+    dw.appendChild(inner);
+    navDigitsBox.appendChild(dw);
+  }
+
+  /**
+   * @param {number} val - 要顯示的計數值
+   */
+  function rollNavDigits(val) {
+    var str = String(val).padStart(NAV_DIGITS, '0');
+    var inners = navDigitsBox.querySelectorAll('.nav-digit-inner');
+    for (var i = 0; i < inners.length; i++) {
+      inners[i].style.transform = 'translateY(' + (-parseInt(str[i]) * NAV_DH) + 'px)';
+    }
+  }
+
+  /** @description 連線 Supabase 讀取並更新計數 */
+  (function bootCounter() {
+    var sbUrl = 'https://doicpmczzvharnszpbsr.supabase.co';
+    var sbKey = 'sb_publishable_c46aC5fxRALpXswtxy8aIA_E-LHxIu9';
+    if (!window.supabase) return;
+    var client = window.supabase.createClient(sbUrl, sbKey);
+
+    client.from('site_stats').select('view_count').eq('id', 1).single()
+      .then(function (res) {
+        if (res.error) throw res.error;
+        var count = (res.data ? res.data.view_count : 0) + 1;
+        client.from('site_stats').update({ view_count: count }).eq('id', 1)
+          .then(function () { rollNavDigits(count); });
+      })
+      .catch(function (err) { console.error('Counter error:', err); });
+  })();
 })();
 </script>
 </body>
