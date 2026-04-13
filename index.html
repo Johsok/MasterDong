@@ -238,23 +238,30 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
 
 /* ===== Hero ===== */
 .hero {
-  padding: 140px 28px 72px;
-  text-align: center;
+  padding: 84px 28px 40px;
   background: linear-gradient(180deg, #0b0f1a 0%, #111827 100%);
+  position: relative;
+  overflow: hidden;
 }
 .hero h1 {
-  font-size: clamp(26px, 3.8vw, 44px); margin-bottom: 20px;
+  font-size: clamp(24px, 3.6vw, 42px); margin: 0 0 10px;
   letter-spacing: .06em;
   background: linear-gradient(135deg, #5eead4, #818cf8);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.hero p { max-width: 740px; margin: 0 auto 28px; color: #94a3b8; font-size: clamp(15px, 1.9vw, 19px); line-height: 2; }
-
+.hero-text {
+  flex: 1; min-width: 0;
+  text-align: left;
+}
+.hero-desc {
+  color: #94a3b8; font-size: clamp(14px, 1.7vw, 17px);
+  line-height: 1.95; margin: 0 0 18px; text-align: justify;
+}
 .hero-cta {
-  display: inline-block; padding: 14px 38px; border-radius: 8px;
+  display: inline-block; padding: 12px 34px; border-radius: 8px;
   background: linear-gradient(135deg, #5eead4, #6366f1);
-  color: #0b0f1a; font-weight: 700; font-size: clamp(15px, 1.9vw, 19px);
+  color: #0b0f1a; font-weight: 700; font-size: clamp(14px, 1.7vw, 17px);
   letter-spacing: .05em;
   transition: transform .2s, box-shadow .2s;
 }
@@ -477,6 +484,28 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
   color: #64748b; font-size: clamp(12px, 1.3vw, 14px); margin-top: 2px;
 }
 
+/* ===== Hero 流星雨 + 行星繞轉 ===== */
+#hero-cosmos {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+.hero > *:not(#hero-cosmos) { position: relative; z-index: 1; }
+
+.planet-orbit {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.06);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; z-index: 0;
+}
+.planet {
+  position: absolute; border-radius: 50%;
+  top: -6px; left: 50%; transform: translateX(-50%);
+  box-shadow: 0 0 8px 2px currentColor;
+  z-index: 1;
+}
+
 /* ===== 太空粒子背景 Canvas ===== */
 #space-canvas {
   position: fixed; top: 0; left: 0;
@@ -486,15 +515,19 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
 body > *:not(#space-canvas) { position: relative; z-index: 1; }
 
 /* ===== 小廣告欄 (Hero 徵人看板) ===== */
-.hero-row { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; }
+.hero-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 32px; flex-wrap: nowrap;
+  max-width: 1000px; margin: 0 auto;
+}
 
 .recruit-banner {
   flex-shrink: 0;
-  width: 220px;
+  width: 210px;
   background: rgba(10, 17, 40, .85);
   border: 1px solid rgba(0, 229, 255, .35);
   border-radius: 12px;
-  padding: 14px 16px;
+  padding: 16px 14px;
   overflow: hidden;
   box-shadow: 0 0 18px rgba(0, 229, 255, .15), inset 0 0 12px rgba(0, 229, 255, .08);
   text-align: center;
@@ -502,13 +535,6 @@ body > *:not(#space-canvas) { position: relative; z-index: 1; }
 
 .recruit-scroll {
   display: inline-block;
-  animation: recruitScroll 7s linear infinite;
-}
-@keyframes recruitScroll {
-  0%   { transform: translateY(100%); opacity: 0; }
-  8%   { opacity: 1; }
-  85%  { opacity: 1; }
-  100% { transform: translateY(-100%); opacity: 0; }
 }
 
 .recruit-scroll .line {
@@ -522,10 +548,22 @@ body > *:not(#space-canvas) { position: relative; z-index: 1; }
   font-size: clamp(17px, 2vw, 22px);
   letter-spacing: .6em;
   margin-bottom: 2px;
+  display: inline-block;
+  animation: explodeBounce 2s ease-in-out infinite, glowColor 3s ease-in-out infinite;
 }
 .recruit-scroll .line-salary {
   color: #fbbf24;
   text-shadow: 0 0 8px rgba(251, 191, 36, .6);
+}
+
+@keyframes explodeBounce {
+  0%   { transform: scale(1); }
+  15%  { transform: scale(1.6); text-shadow: 0 0 30px #fff, 0 0 60px #00e5ff, 0 0 90px #a78bfa; }
+  30%  { transform: scale(0.85); }
+  45%  { transform: scale(1.25); text-shadow: 0 0 20px #00e5ff; }
+  60%  { transform: scale(0.95); }
+  75%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 @keyframes glowColor {
@@ -596,13 +634,15 @@ body > *:not(#space-canvas) { position: relative; z-index: 1; }
   }
   .nav-item.open .dropdown { max-height: 500px; }
 
-  .hero h1 { font-size: clamp(22px, 5.5vw, 32px); }
-  .hero { padding: 115px 18px 44px; }
+  .hero h1 { font-size: clamp(20px, 5.5vw, 30px); }
+  .hero { padding: 86px 16px 32px; }
+  .hero-text { text-align: center; }
+  .hero-desc { text-align: center; }
   .section { padding: 44px 18px; }
   .section p { font-size: clamp(14px, 3.8vw, 17px); }
   .services-grid { grid-template-columns: 1fr; }
 
-  .hero-row { flex-direction: column; gap: 18px; }
+  .hero-row { flex-wrap: wrap; flex-direction: column; gap: 16px; }
   .recruit-banner { width: 80%; max-width: 260px; }
 
   .nav-counter { display: none; }
@@ -670,7 +710,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </li>
     </ul>
     <div class="nav-counter">
-      <span class="nav-counter-label">VISITORS</span>
+      <span class="nav-counter-label">訪客：</span>
       <div class="nav-digits" id="nav-digits"></div>
     </div>
   </div>
@@ -678,13 +718,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ===== Hero ===== -->
 <section class="hero" id="home">
+  <canvas id="hero-cosmos"></canvas>
+  <div id="planet-system"></div>
   <div class="hero-row">
-    <div>
+    <div class="hero-text">
       <h1>台中抿石泥作工程 — 30年專業經驗</h1>
+      <p class="hero-desc">董師傅提供台中地區泥作工程施作：水泥粉刷、貼壁磚及地磚、房屋修繕翻新、浴室整修、抿石子、磚牆隔間、壁癌處理等全方位服務。免費現場估價，看圖估價均可。</p>
+      <div style="text-align:center;"><a href="tel:0928912748" class="hero-cta hero-cta-tel">立即來電 0928-912748</a></div>
     </div>
     <div class="recruit-banner">
       <div class="recruit-scroll">
-        <div class="line line-title">誠&nbsp;&nbsp;&nbsp;&nbsp;徵</div>
+        <div class="line line-title">誠&nbsp;徵</div>
         <div class="line">泥作小工或學徒</div>
         <div class="line line-salary">薪資 $1600~$2500/日</div>
         <div class="line">(依能力給薪或面議)</div>
@@ -693,8 +737,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
   </div>
-  <p>董師傅提供台中地區泥作工程施作：水泥粉刷、貼壁磚及地磚、房屋修繕翻新、浴室整修、抿石子、磚牆隔間、壁癌處理等全方位服務。免費現場估價，看圖估價均可。</p>
-  <a href="tel:0928912748" class="hero-cta hero-cta-tel">立即來電 0928-912748</a>
 </section>
 
 <!-- ===== 泥作工程 ===== -->
@@ -1257,6 +1299,102 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
   });
+
+  /* ── Hero 流星雨 (Canvas) ── */
+  var heroCanvas = document.getElementById('hero-cosmos');
+  var hCtx = heroCanvas.getContext('2d');
+  var heroEl = document.getElementById('home');
+  var meteors = [];
+
+  function resizeHeroCanvas() {
+    heroCanvas.width  = heroEl.offsetWidth;
+    heroCanvas.height = heroEl.offsetHeight;
+  }
+
+  /** @description 產生一顆新流星 */
+  function spawnMeteor() {
+    return {
+      x: Math.random() * heroCanvas.width * 1.2,
+      y: -10,
+      len: Math.random() * 60 + 40,
+      speed: Math.random() * 4 + 3,
+      opacity: Math.random() * 0.7 + 0.3,
+      hue: Math.random() > 0.5 ? 190 : 45
+    };
+  }
+
+  function drawMeteors() {
+    hCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+    if (Math.random() < 0.12) meteors.push(spawnMeteor());
+
+    for (var i = meteors.length - 1; i >= 0; i--) {
+      var m = meteors[i];
+      m.x -= m.speed * 0.6;
+      m.y += m.speed;
+
+      var grad = hCtx.createLinearGradient(m.x, m.y, m.x + m.len * 0.6, m.y - m.len);
+      grad.addColorStop(0, 'hsla(' + m.hue + ',100%,85%,' + m.opacity + ')');
+      grad.addColorStop(1, 'hsla(' + m.hue + ',100%,85%,0)');
+      hCtx.strokeStyle = grad;
+      hCtx.lineWidth = 1.5;
+      hCtx.beginPath();
+      hCtx.moveTo(m.x, m.y);
+      hCtx.lineTo(m.x + m.len * 0.6, m.y - m.len);
+      hCtx.stroke();
+
+      if (m.y > heroCanvas.height + 20) meteors.splice(i, 1);
+    }
+    requestAnimationFrame(drawMeteors);
+  }
+
+  window.addEventListener('resize', resizeHeroCanvas);
+  resizeHeroCanvas();
+  drawMeteors();
+
+  /* ── Hero 九大行星繞轉 (CSS animation via JS 建立) ── */
+  var planetSystem = document.getElementById('planet-system');
+  planetSystem.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;';
+
+  var planets = [
+    { name:'水星', r:48,  size:4,  color:'#b0b0b0', dur:4  },
+    { name:'金星', r:68,  size:5,  color:'#f5deb3', dur:6  },
+    { name:'地球', r:90,  size:6,  color:'#4fc3f7', dur:8  },
+    { name:'火星', r:112, size:5,  color:'#ef5350', dur:10 },
+    { name:'木星', r:142, size:10, color:'#ffcc80', dur:14 },
+    { name:'土星', r:175, size:9,  color:'#ffe082', dur:18 },
+    { name:'天王星',r:205, size:7, color:'#80deea', dur:24 },
+    { name:'海王星',r:232, size:7, color:'#5c6bc0', dur:30 },
+    { name:'冥王星',r:255, size:3, color:'#ce93d8', dur:36 }
+  ];
+
+  /** @description 動態建立行星軌道與行星 DOM */
+  planets.forEach(function(p) {
+    var orbit = document.createElement('div');
+    orbit.className = 'planet-orbit';
+    orbit.style.width  = (p.r * 2) + 'px';
+    orbit.style.height = (p.r * 2) + 'px';
+    orbit.style.animation = 'orbitSpin ' + p.dur + 's linear infinite';
+
+    var dot = document.createElement('div');
+    dot.className = 'planet';
+    dot.title = p.name;
+    dot.style.width  = p.size + 'px';
+    dot.style.height = p.size + 'px';
+    dot.style.background = p.color;
+    dot.style.color = p.color;
+
+    orbit.appendChild(dot);
+    planetSystem.appendChild(orbit);
+  });
+
+  var sunDot = document.createElement('div');
+  sunDot.style.cssText = 'position:absolute;top:50%;left:50%;width:12px;height:12px;border-radius:50%;background:#ffd54f;transform:translate(-50%,-50%);box-shadow:0 0 16px 4px rgba(255,213,79,.6);z-index:1;pointer-events:none;';
+  planetSystem.appendChild(sunDot);
+
+  var styleTag = document.createElement('style');
+  styleTag.textContent = '@keyframes orbitSpin{0%{transform:translate(-50%,-50%) rotate(0deg);}100%{transform:translate(-50%,-50%) rotate(360deg);}}';
+  document.head.appendChild(styleTag);
 
   /* ── 太空懸浮粒子 ── */
   var spaceCanvas = document.getElementById('space-canvas');
