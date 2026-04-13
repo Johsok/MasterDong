@@ -2,7 +2,10 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="董師傅泥作">
 <title>台中泥作工程推薦｜抿石子、浴室整修、房屋修繕、壁癌處理 - 董師傅 0928-912748</title>
 <meta name="description" content="台中30年專業泥作經驗，董師傅提供水泥粉刷、貼磁磚、房屋修繕翻新、浴室整修、抿石子、磚牆隔間、壁癌處理等全方位服務。大小工程免費現場估價，歡迎加LINE或來電！">
 <meta name="keywords" content="台中泥作工程, 台中泥作推薦, 台中房屋修繕, 台中浴室整修, 台中抿石子, 台中磚牆隔間, 台中壁癌處理, 台中泥作師傅, 台中水泥工程, 台中外牆拉皮, 台中磁磚施工, 董師傅泥作, 0928-912748">
@@ -155,7 +158,7 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
 
 /* ===== Scroll Progress Bar ===== */
 #scroll-progress-bar {
-  position: fixed; top: 0; left: 0;
+  position: fixed; top: env(safe-area-inset-top, 0px); left: 0;
   width: 0%; height: 4px;
   background: linear-gradient(90deg, #00f5ff, #0bbcd6, #00ff88);
   z-index: 9999;
@@ -170,12 +173,14 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
   background: rgba(11, 15, 26, .92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(94, 234, 212, .12);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .nav-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; align-items: center; justify-content: center;
-  padding: 0 20px; height: 80px;
+  padding: 0 max(20px, env(safe-area-inset-right, 0px)) 0 max(20px, env(safe-area-inset-left, 0px));
+  height: 80px;
   gap: 2px;
   position: relative;
 }
@@ -238,7 +243,7 @@ h1, h2, h3 { color: #f0f4ff; letter-spacing: .04em; }
 
 /* ===== Hero ===== */
 .hero {
-  padding: 84px 28px 40px;
+  padding: calc(84px + env(safe-area-inset-top, 0px)) 28px 40px;
   background: linear-gradient(180deg, #0b0f1a 0%, #111827 100%);
   position: relative;
   overflow: hidden;
@@ -613,7 +618,7 @@ body > *:not(#space-canvas) { position: relative; z-index: 1; }
   .hamburger { display: flex; }
 
   .nav-menu {
-    position: fixed; top: 80px; left: 0; right: 0; bottom: 0;
+    position: fixed; top: calc(80px + env(safe-area-inset-top, 0px)); left: 0; right: 0; bottom: 0;
     flex-direction: column; background: #0b0f1a;
     padding: 16px; gap: 0; overflow-y: auto;
     transform: translateX(100%); transition: transform .3s;
@@ -635,7 +640,7 @@ body > *:not(#space-canvas) { position: relative; z-index: 1; }
   .nav-item.open .dropdown { max-height: 500px; }
 
   .hero h1 { font-size: clamp(20px, 5.5vw, 30px); }
-  .hero { padding: 86px 16px 32px; }
+  .hero { padding: calc(86px + env(safe-area-inset-top, 0px)) 16px 32px; }
   .hero-text { text-align: center; }
   .hero-desc { text-align: center; }
   .section { padding: 44px 18px; }
@@ -1489,11 +1494,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /** @description 連線 Supabase 讀取並更新計數 */
-  (function bootCounter() {
+  /**
+   * @description 連線 Supabase 讀取並更新計數（含重試）
+   * @param {number} [retries=3] - 剩餘重試次數
+   */
+  function bootCounter(retries) {
+    if (retries === undefined) retries = 3;
     var sbUrl = 'https://doicpmczzvharnszpbsr.supabase.co';
     var sbKey = 'sb_publishable_c46aC5fxRALpXswtxy8aIA_E-LHxIu9';
-    if (!window.supabase) return;
+
+    if (!window.supabase) {
+      if (retries > 0) {
+        setTimeout(function () { bootCounter(retries - 1); }, 1500);
+      }
+      return;
+    }
     var client = window.supabase.createClient(sbUrl, sbKey);
 
     client.from('site_stats').select('view_count').eq('id', 1).single()
@@ -1503,8 +1518,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         client.from('site_stats').update({ view_count: count }).eq('id', 1)
           .then(function () { rollNavDigits(count); });
       })
-      .catch(function (err) { console.error('Counter error:', err.message || err); });
-  })();
+      .catch(function (err) {
+        console.error('Counter error:', err.message || err);
+        if (retries > 0) setTimeout(function () { bootCounter(retries - 1); }, 2000);
+      });
+  }
+  bootCounter();
 })();
 </script>
 </body>
