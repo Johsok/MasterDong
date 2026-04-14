@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://johsok.github.io/MasterDong/sitemap.xml
+Sitemap: https://sipstones.hermit.idv.tw/sitemap.xml
