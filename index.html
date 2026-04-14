@@ -11,7 +11,7 @@
 <meta name="keywords" content="台中泥作工程, 台中泥作推薦, 台中房屋修繕, 台中浴室整修, 台中抿石子, 台中磚牆隔間, 台中壁癌處理, 台中泥作師傅, 台中水泥工程, 台中外牆拉皮, 台中磁磚施工, 董師傅泥作, 0928-912748">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://johsonluo.github.io/niza/">
-<link rel="shortcut icon" type="image/x-icon" href="https://sipstones.hermit.idv.tw/images/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
@@ -618,7 +618,7 @@ body > *:not(#space-canvas):not(#scroll-progress-bar) { position: relative; z-in
   .hamburger { display: flex; }
 
   .nav-menu {
-    position: fixed; top: calc(80px + env(safe-area-inset-top, 0px)); left: 0; right: 0; bottom: 0;
+    position: fixed; top: calc(90px + env(safe-area-inset-top, 0px)); left: 0; right: 0; bottom: 0;
     flex-direction: column; background: #0b0f1a;
     padding: 16px; gap: 0; overflow-y: auto;
     transform: translateX(100%); transition: transform .3s;
@@ -640,7 +640,7 @@ body > *:not(#space-canvas):not(#scroll-progress-bar) { position: relative; z-in
   .nav-item.open .dropdown { max-height: 500px; }
 
   .hero h1 { font-size: clamp(20px, 5.5vw, 30px); }
-  .hero { padding: calc(86px + env(safe-area-inset-top, 0px)) 16px 32px; }
+  .hero { padding: calc(96px + env(safe-area-inset-top, 0px)) 16px 32px; }
   .hero-text { text-align: center; }
   .hero-desc { text-align: center; }
   .section { padding: 44px 18px; }
@@ -650,10 +650,27 @@ body > *:not(#space-canvas):not(#scroll-progress-bar) { position: relative; z-in
   .hero-row { flex-wrap: wrap; flex-direction: column; gap: 16px; }
   .recruit-banner { width: 80%; max-width: 260px; }
 
+  .nav-inner {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 60px;
+    padding-top: 10px;
+    padding-bottom: 6px;
+    justify-content: center;
+  }
+  .nav-brand {
+    width: 100%;
+    text-align: center;
+    margin-right: 0;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
   .nav-counter {
-    position: absolute;
-    right: 12px;
+    position: static;
+    width: 100%;
+    justify-content: center;
     margin-left: 0;
+    margin-top: 2px;
   }
   .nav-counter-label { font-size: 8px; letter-spacing: 0.5px; }
   .nav-digit {
@@ -679,7 +696,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="hamburger" id="hamburger" aria-label="選單">
       <span></span><span></span><span></span>
     </button>
-    <span class="nav-brand">董師傅泥作工程</span>
+    <span class="nav-brand">台中抿石董師傅</span>
     <ul class="nav-menu" id="navMenu">
       <li class="nav-item">
         <a href="#about">泥作工程 <span class="arrow">&#9662;</span></a>
